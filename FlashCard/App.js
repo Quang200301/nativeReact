@@ -4,6 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import Play from './Screen/Play';
 import Setting from './Screen/Setting';
+import Flatlist from './Screen/Flatlist';
 export default function App() {
   const Stack =  createStackNavigator();
   return (
@@ -11,6 +12,7 @@ export default function App() {
       <Stack.Navigator screenOptions={{headerShown: false}}>
         <Stack.Screen name='play' component={Play}/>
         <Stack.Screen name='setting' component={Setting}/>
+        <Stack.Screen name='flatlist' component={Flatlist}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

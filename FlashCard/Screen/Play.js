@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Pressable, TouchableOpacity, Alert } from "react-native";
+import { View, Text, StyleSheet, Pressable, TouchableOpacity, Alert, Image } from "react-native";
 import dataImport from '../data';
-export default function Play() {
+export default function Play({ navigation }) {
     const [data, setData] = useState(null);
     const [index, setIndex] = useState(0);
     const [changeLanguage, setChangeLanguage] = useState('vietnam');
@@ -24,27 +24,38 @@ export default function Play() {
     const handleNext = () => {
         if (index < data.length - 1) {
             setIndex(index + 1)
+            setChangeLanguage('english')
         }
     }
     const handlePrevious = () => {
         if (index > 0) {
             setIndex(index - 1)
+            setChangeLanguage('english')
         }
     };
     const handleReset = () => {
-        setIndex(0)
+        setData(dataImport)
+        setChangeLanguage('english')
     }
     const handleRemove = (indexToRemove) => {
-        console.log("index", index);
-        console.log("data follow index ", data[index]);
-        if (indexToRemove >= 0 && indexToRemove < data.length) {
-            if(data.length> 1){
-            data.splice(indexToRemove, 1);
-            Alert.alert('sucess delete');
-            setData([...data]);
-            }
-            else{
-                Alert.alert('Het chử chỉ còn 1.')
+        if (data.length === 1) {
+            Alert.alert('Hết Thẻ Chỉ còn một cái duy nhất ')
+        } else {
+            if (indexToRemove >= 0 && indexToRemove < data.length) {
+                if (data.length > 1) {
+                    data.splice(indexToRemove, 1);
+                    setData([...data]);
+                    // Nếu indexToRemove là cuối cùng, điều chỉnh index để hiển thị thẻ trước đó
+                    if (indexToRemove === data.length) {
+                        setIndex(indexToRemove - 1);
+                    }
+                    Alert.alert('Success delete');
+                } else {
+                    // Nếu chỉ còn một phần tử, hiển thị thông báo "hết thẻ"
+                    Alert.alert('Hết thẻ');
+                    setData([null]);
+                    setIndex(0);
+                }
             }
         }
 
@@ -52,7 +63,7 @@ export default function Play() {
     return (
         <>
             <View style={styles.title}>
-                <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 25 }}>Play...(Card){index + 1}</Text>
+                <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 25 }}>Play...({data && data.length} Card)</Text>
             </View>
 
             <View style={styles.container}>
@@ -90,8 +101,15 @@ export default function Play() {
             </View>
 
             <View style={styles.footer}>
-                <Text style={styles.tool} >Play</Text>
-                <Text style={styles.tool}>Setting</Text>
+                <View>
+                    <Image style={{ width: 30, height: 30 }} source={require('../assets/play.jpg')} />
+                    <Text style={styles.tool} >Play</Text>
+                </View>
+                <View>
+                    <Image style={{ width: 30, height: 30 }} source={require('../assets/setting-removebg-preview.png')} />
+                    <Text style={styles.tool} onPress={() => navigation.navigate('setting')}>Setting</Text>
+                </View>
+
             </View>
         </>
     )
